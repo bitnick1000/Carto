@@ -50,8 +50,8 @@ function fillCanvasBackground()
 {
 	var canvas = document.getElementById('canvas1');
 	var ctx = canvas.getContext('2d');
-	var width=100;
-	var height=100;
+	var width=canvas.width;
+	var height=canvas.height;
 	for (var y = 0; y < height; y += 16) {
 		for (var x = 0; x < width; x += 16) {
 			fillRect(ctx, x, y, 8, 8, "#cccccc");

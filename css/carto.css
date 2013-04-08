@@ -1,4 +1,38 @@
 body {
-	background-color: #535353;
+background-color:#535353;
 }
 
+#tool_container {
+	padding: 0,0,0,3px;
+margin:0,0,0,3px;
+border:1px solid #282828;
+width:37px;
+height:150px;
+float:left;
+}
+
+.tool {
+width:24px;
+height:24px;
+margin:0;
+padding:0;
+}
+
+.tool:hover {
+background-color:#0F0;
+}
+
+.tool_rect {
+background:url(../images/rect.png) no-repeat;
+}
+.tool_rect:hover {
+border:1px solid #282828;
+}
+
+header {
+text-align:center;
+}
+
+footer {
+text-align:center;
+}

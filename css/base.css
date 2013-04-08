@@ -1,0 +1,31 @@
+body, div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, pre, form, hr, p, span fieldset, input, p, blockquote, th, td.ul li
+{
+    margin: 0px;
+    padding: 0px;
+}
+table
+{
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+fieldset, img
+{
+    border: none;
+}
+address, caption, cite, code, dfn, th, var
+{
+    font-style: normal;
+    font-weight: normal;
+}
+ol, ul, ul li
+{
+
+}
+caption, th
+{
+    text-align: left;
+}
+img a
+{
+    border: none;
+}
