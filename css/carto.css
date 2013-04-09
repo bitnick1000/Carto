@@ -36,3 +36,15 @@ text-align:center;
 footer {
 text-align:center;
 }
+
+#canvasTmep, #canvas1 {
+	//cursor:crosshair;
+	position: absolute;
+}
+#canvas1:hover{
+	//cursor:crosshair;
+	//border:10px solid #282828;
+}
+#canvas1:active{
+	//cursor:crosshair;
+}

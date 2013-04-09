@@ -17,63 +17,103 @@ function Rect(x, y, width, height) {
 	this.height = height;
 }
 
-function drawCircle(ctx, x, y, radius) {
-	var circle_gradient = ctx.createRadialGradient(x - 3, y - 3, 1, x, y, radius);
-	circle_gradient.addColorStop(0, "#fff");
-	circle_gradient.addColorStop(1, "#cc0");
-	ctx.fillStyle = circle_gradient;
-	// ctx.fillStyle = "rgba(200,200,100,0.7)";
-	// ctx.fillStyle = "red";
-	ctx.beginPath();
-	ctx.arc(x, y, radius, 0, Math.PI * 2, true);
-	ctx.closePath();
-	ctx.fill();
+function Point(x, y) {
+	this.x = x;
+	this.y = y;
 }
 
-function drawLine(context, x1, y1, x2, y2, thickness) {
-	context.beginPath();
-	context.moveTo(x1, y1);
-	context.lineTo(x2, y2);
-	context.lineWidth = thickness;
-	context.strokeStyle = "#cfc";
-	context.stroke();
-}
 
-function fillRect(context, x, y, width, height, color) {
-	context.beginPath();
-	context.rect(x, y, width, height);
-	context.fillStyle = color;
-	context.fill();
-}
-
-function fillCanvasBackground()
-{
-	var canvas = document.getElementById('canvas1');
-	var ctx = canvas.getContext('2d');
-	var width=canvas.width;
-	var height=canvas.height;
+function fillCanvasBackground() {
+	var bottom = new Canvas("bottom");
+	//var canvas = document.getElementById('bottom');
+	//var ctx = canvas.getContext('2d');
+	var width = bottom.canvas.width;
+	var height = bottom.canvas.height;
 	for (var y = 0; y < height; y += 16) {
 		for (var x = 0; x < width; x += 16) {
-			fillRect(ctx, x, y, 8, 8, "#cccccc");
+			bottom.fillRect(x, y, 8, 8, "#cccccc");
 		}
 	}
 	for (var y = 8; y < height; y += 16) {
 		for (var x = 8; x < width; x += 16) {
-			fillRect(ctx, x, y, 8, 8, "#cccccc");
+			bottom.fillRect(x, y, 8, 8, "#cccccc");
 		}
 	}
 	for (var y = 0; y < height; y += 16) {
 		for (var x = 8; x < width; x += 16) {
-			fillRect(ctx, x, y, 8, 8, "#ffffff");
+			bottom.fillRect(x, y, 8, 8, "#ffffff");
 		}
 	}
 	for (var y = 8; y < height; y += 16) {
 		for (var x = 0; x < width; x += 16) {
-			fillRect(ctx, x, y, 8, 8, "#ffffff");
+			bottom.fillRect(x, y, 8, 8, "#ffffff");
 		}
 	}
 }
+var Tools = {
+	NULL: 0,
+	RECT: 1,
+	ss: 0
+};
+var carto = {
+	point1: undefined,
+	point2: undefined,
+	selectedTool: Tools.RECT,
+	drawShape: false,
+	ss: "0"
+};
+
 $(function() {
 	//alert('init');
+	var bottom = new Canvas("bottom");
+	var temp=new Canvas("temp");
+
+	//carto.selectedTool=new int(10);
+	// alert("selectedTool " + carto.selectedTool);
+	// alert("ss " + carto.ss);
+
+	// alert(carto.selectedTool);
+	// alert("RECT "+Tools.RECT);
+	if (carto.selectedTool == Tools.RECT) {
+		$("#panel").css("cursor", "crosshair");
+	}
+
+	//bottom.canvas.onselectstart=function(){return false;}
+	//bottom.sayHi('sdf');
 	fillCanvasBackground();
+	temp.fillRect(0,0,500,500,"#ff00ff");
+	temp.clearAll();
+	//var canvas = document.getElementById('bottom');
+	//var ctx = canvas.getContext('2d');
+	$("#panel").mousedown(function(e) {
+		var canvasPosition = $(this).offset();
+		var mouseX = e.clientX - canvasPosition.left || 0;
+		var mouseY = e.clientY - canvasPosition.top || 0;
+		//alert('mousedown');
+		point1 = new Point(mouseX, mouseY);
+		carto.drawShape = true;
+		//point1=p1;
+	});
+	$("#panel").mousemove(function(e) {
+		var canvasPosition = $(this).offset();
+		var mouseX = e.clientX - canvasPosition.left || 0;
+		var mouseY = e.clientY - canvasPosition.top || 0;
+		//alert('mousedown');
+		var p = new Point(mouseX, mouseY);
+		if (carto.drawShape) {
+			temp.clearAll();
+			temp.drawRect(point1.x, point1.y, p.x - point1.x, p.y - point1.y, "#000000");
+		}
+	});
+	$("#panel").mouseup(function(e) {
+		var canvasPosition = $(this).offset();
+		var mouseX = e.clientX - canvasPosition.left || 0;
+		var mouseY = e.clientY - canvasPosition.top || 0;
+		point2 = new Point(mouseX, mouseY);
+		//fillRect(ctx,point1.x,point1.y,point2.x-point1.x,point2.y-point1.y,"#00ff00");
+		bottom.drawRect(point1.x, point1.y, point2.x - point1.x, point2.y - point1.y, "#00ff00");
+		carto.drawShape = false;
+		temp.clearAll();
+		//alert('mouseup');
+	});
 });
