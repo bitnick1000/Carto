@@ -66,7 +66,7 @@ var carto = {
 $(function() {
 	//alert('init');
 	var bottom = new Canvas("bottom");
-	var temp=new Canvas("temp");
+	var temp = new Canvas("temp");
 
 	//carto.selectedTool=new int(10);
 	// alert("selectedTool " + carto.selectedTool);
@@ -75,17 +75,17 @@ $(function() {
 	// alert(carto.selectedTool);
 	// alert("RECT "+Tools.RECT);
 	if (carto.selectedTool == Tools.RECT) {
-		$("#panel").css("cursor", "crosshair");
+		$("#top").css("cursor", "crosshair");
 	}
 
 	//bottom.canvas.onselectstart=function(){return false;}
 	//bottom.sayHi('sdf');
 	fillCanvasBackground();
-	temp.fillRect(0,0,500,500,"#ff00ff");
+	temp.fillRect(0, 0, 500, 500, "#ff00ff");
 	temp.clearAll();
 	//var canvas = document.getElementById('bottom');
 	//var ctx = canvas.getContext('2d');
-	$("#panel").mousedown(function(e) {
+	$("#top").mousedown(function(e) {
 		var canvasPosition = $(this).offset();
 		var mouseX = e.clientX - canvasPosition.left || 0;
 		var mouseY = e.clientY - canvasPosition.top || 0;
@@ -94,7 +94,7 @@ $(function() {
 		carto.drawShape = true;
 		//point1=p1;
 	});
-	$("#panel").mousemove(function(e) {
+	$("#top").mousemove(function(e) {
 		var canvasPosition = $(this).offset();
 		var mouseX = e.clientX - canvasPosition.left || 0;
 		var mouseY = e.clientY - canvasPosition.top || 0;
@@ -105,8 +105,9 @@ $(function() {
 			temp.drawRect(point1.x, point1.y, p.x - point1.x, p.y - point1.y, "#000000");
 		}
 	});
-	$("#panel").mouseup(function(e) {
+	$("#top").mouseup(function(e) {
 		var canvasPosition = $(this).offset();
+		2
 		var mouseX = e.clientX - canvasPosition.left || 0;
 		var mouseY = e.clientY - canvasPosition.top || 0;
 		point2 = new Point(mouseX, mouseY);
@@ -116,4 +117,33 @@ $(function() {
 		temp.clearAll();
 		//alert('mouseup');
 	});
+	$(window).resize(function() {
+		refreshCanvasPos();
+	});
+	refreshCanvasPos();
 });
+
+function refreshCanvasPos() {
+	var width = $(window).width() - 250;
+	$('#panel_container').css("width", width.toString() + "px");
+
+	var x = $('#panel_container').offset().left;
+	var y = $('#panel_container').offset().top;
+
+	var containerWidth = $('#panel_container').width();
+	var containerHeight = $('#panel_container').height();
+
+	canvasWidth = $("#bottom").width();
+	canvasHeight = $("#bottom").height();
+	
+	canvasX = x + (containerWidth - canvasWidth) / 2;
+	canvasY = y + (containerHeight - canvasHeight) / 2;
+
+	console.log("x:" + x);
+	console.log("y:" + y);
+	console.log("containerWidth:" + containerWidth);
+	console.log("canvasWidth:" + canvasWidth);
+
+	$("canvas").css("left", canvasX.toString() + "px");
+	$("canvas").css("top", canvasY.toString() + "px");
+}
