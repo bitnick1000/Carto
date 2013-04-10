@@ -2,12 +2,12 @@ body {
 background-color:#535353;
 }
 
-#tool_container {
+#left_tool_container {
 	padding: 0,0,0,3px;
 margin:0,0,0,3px;
 border:1px solid #282828;
 width:37px;
-height:150px;
+height:100%;
 float:left;
 }
 
@@ -27,6 +27,9 @@ background:url(../images/rect.png) no-repeat;
 }
 .tool_select {
 background:url(../images/select.png) no-repeat;
+}
+.tool_simulate_begin {
+background:url(../images/simulate.png) no-repeat;
 }
 .tool:hover {
 border:1px solid #282828;
