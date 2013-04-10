@@ -82,19 +82,13 @@ var carto = {
 };
 var canvas = {
 	bottom: new Canvas("bottom"),
-	background: new Canvas("background"),
 	layer1: new Canvas("layer1"),
 	simulator: new Canvas("simulator"),
 	temp: new Canvas("temp")
 }
-var car;
-
 $(function() {
 	fillCanvasBackground();
 	onSelectedToolChanged();
-
-	//Tools["simulate"].looping = true
-	//step();
 
 	$("#tool_select").click(function(e) {
 		carto.selectedTool = Tools.SELECT;
@@ -127,11 +121,15 @@ $(function() {
 	});
 
 	$("#temp").mousedown(function(e) {
+		//alert("#temp mousedown");
 		if (carto.selectedTool == Tools.RECT) {
+			console.log("drawRect_onMouseDonw");
 			drawRect_onMouseDonw(e);
 		}
 	});
+
 	$("#temp").click(function(e) {
+		//alert("#temp click");
 		var canvasPosition = $("#temp").offset();
 		var x = e.clientX - canvasPosition.left || 0;
 		var y = e.clientY - canvasPosition.top || 0;
@@ -153,12 +151,14 @@ $(function() {
 	});
 	$("#temp").mousemove(function(e) {
 		if (carto.selectedTool == Tools.RECT) {
+			console.log("drawRect_onMouseMove");
 			drawRect_onMouseMove(e);
 		}
 
 	});
 	$("#temp").mouseup(function(e) {
 		if (carto.selectedTool == Tools.RECT) {
+			console.log("drawRect_onMouseUp");
 			drawRect_onMouseUp(e);
 		}
 	});
@@ -182,6 +182,16 @@ $(function() {
 		onResize();
 	});
 	onResize();
+
+	// var img = new Image();
+	// img.src = "images/rect.png";
+	var img = document.getElementById("image1");
+	img.src="images/rect.png";
+	// img.onload = function() {
+	// 	canvas = document.getElementById("background");
+	// 	context = canvas.getContext('2d');
+	// 	context.drawImage(img, 0, 0, 500, 500);
+	// }
 });
 
 function onSelectedToolChanged() {
@@ -237,6 +247,10 @@ function drawRect_onMouseMove(e) {
 	var mouseY = e.clientY - canvasPosition.top || 0;
 	var p = new Point(mouseX, mouseY);
 	if (carto.drawShape) {
+		// var canvas = document.getElementById("background");
+		// var context = this.canvas.getContext('2d');
+		// 		context.clearRect(0, 0, canvas.width, canvas.height);
+
 		canvas["temp"].clearAll();
 		canvas["temp"].drawRect(Tools.rect.point.x, Tools.rect.point.y, p.x - Tools.rect.point.x, p.y - Tools.rect.point.y, "#000000");
 	}
@@ -339,10 +353,10 @@ function step() {
 }
 
 function createRect(world, x, y, width, height, rotation) {
-	width/=2;
-	height/=2;
-	x+=width;
-	y+=height;
+	width /= 2;
+	height /= 2;
+	x += width;
+	y += height;
 	//box shape definition
 	var shape = new b2BoxDef();
 	//shape.density = 1.0;

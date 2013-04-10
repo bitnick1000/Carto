@@ -92,10 +92,11 @@
 		<section id="left_tool_container"  >
 			<div id="tool_select" class="tool tool_select"></div>
 			<div id="tool_rect" class="tool tool_rect"></div>
+			
 		</section>
 		<section id="panel_container" style="margin-left:5px;background-color:#282828; width:1500px; height:720px;float:left;">
 			<canvas id="bottom" width="1280px" height="720px" style= "position: absolute;left: 100; top: 100;z-index:0;" ></canvas>
-			<canvas id="background" width="1280px" height="720px" style= "position: absolute;left: 100; top: 100;z-index:1;" ></canvas>
+			<img id="background" src="images/simulate.png" style="position: absolute;left: 100; top: 100;width:1500px;height:720px;z-index:1" />
 			<canvas id="layer1" width="1280px" height="720px" style= "position: absolute;left: 100; top: 100;z-index:2;" ></canvas>
 			<canvas id="simulator" width="1280px" height="720px" style= "position: absolute;left: 100; top: 100; z-index:3;"></canvas>
 			<canvas id="temp" width="1280px" height="720px" style= "position: absolute;left: 100; top: 100; z-index:4;"></canvas>
@@ -115,28 +116,36 @@
 	<script src="js/Canvas.js"></script>
 	<script src="js/init.js"></script>
 	<script>
-function displayResult()
-{
-var x=document.getElementById("fname").value;
-//var d=document.getElementById("background_path");
-$("#background_path").html("background-path:"+x);
-var img=new Image(); 
-img.src=x; 
-canvas = document.getElementById("background");
-context = canvas.getContext('2d');
-context.drawImage(img,0,0);
-//alert(x);
-//d.value=x;
-}
+// function displayResult()
+// {
+// var x=document.getElementById("fname").value;
+// //var d=document.getElementById("background_path");
+// $("#background_path").html("background-path:"+x);
+// var img=new Image(); 
+// img.src=x; 
+// canvas = document.getElementById("background");
+// context = canvas.getContext('2d');
+// context.drawImage(img,0,0);
+// //alert(x);
+// //d.value=x;
+// }
 oFReader = new FileReader(), rFilter = /^(?:image\/bmp|image\/cis\-cod|image\/gif|image\/ief|image\/jpeg|image\/jpeg|image\/jpeg|image\/pipeg|image\/png|image\/svg\+xml|image\/tiff|image\/x\-cmu\-raster|image\/x\-cmx|image\/x\-icon|image\/x\-portable\-anymap|image\/x\-portable\-bitmap|image\/x\-portable\-graymap|image\/x\-portable\-pixmap|image\/x\-rgb|image\/x\-xbitmap|image\/x\-xpixmap|image\/x\-xwindowdump)$/i;
  
 oFReader.onload = function (oFREvent) {
-var path=oFREvent.target.result;
-var img=new Image(); 
-img.src=path;
-canvas = document.getElementById("background");
-context = canvas.getContext('2d');
-context.drawImage(img,0,0);
+var img=document.getElementById("background");
+img.src=oFREvent.target.result;
+//img.src=path;
+//alert("sfd");
+// var img=new Image(); 
+// img.src=path;
+ //img.onload=function	(){
+
+// 	canvas = document.getElementById("background");
+// 	context = canvas.getContext('2d');
+// 	context.drawImage(img,0,0,500,500);
+//img.src=path;
+ //}
+
 
 // var x=document.getElementById("fname").value;
 // $("#background_path").html("background-path:"+x);
