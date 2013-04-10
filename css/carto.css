@@ -25,7 +25,10 @@ background-color:#0F0;
 .tool_rect {
 background:url(../images/rect.png) no-repeat;
 }
-.tool_rect:hover {
+.tool_select {
+background:url(../images/select.png) no-repeat;
+}
+.tool:hover {
 border:1px solid #282828;
 }
 

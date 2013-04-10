@@ -9,9 +9,20 @@
 	<link rel="stylesheet" href="css/carto.css" />
 </head>
 <body>
+	<div style="text-align:center;">
+		x:
+		<input id="x" type="text" style="width:60px;"/>
+		y:
+		<input id="y" type="text" style="width:60px;"/>
+		width:
+		<input id="width" type="text" style="width:60px;"/>
+		height:
+		<input id="height" type="text" style="width:60px;"/>
+	</div>
 	<div style="height:720px">
 		<section id="tool_container" >
-			<div class="tool tool_rect"></div>
+			<div id="tool_select" class="tool tool_select"></div>
+			<div id="tool_rect" class="tool tool_rect"></div>
 		</section>
 		<div id="panel_container" style="margin-left:50px;background-color:#282828; width:1500px; height:720px;">
 			<canvas id="bottom" width="1280px" height="720px" style= "position: absolute;left: 100; top: 100;z-index:0;" ></canvas>

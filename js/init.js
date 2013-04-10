@@ -16,6 +16,15 @@ function Rect(x, y, width, height) {
 	this.width = width;
 	this.height = height;
 }
+Rect.prototype.contains = function(x, y) {
+	var maxX = this.x + this.width;
+	var maxY = this.y + this.height;
+	if (this.x < x && x < maxX && this.y < y && y < maxY) {
+		return true;
+	} else {
+		return false;
+	}
+}
 
 function Point(x, y) {
 	this.x = x;
@@ -51,34 +60,61 @@ function fillCanvasBackground() {
 	}
 }
 var Tools = {
-	NULL: 0,
-	RECT: 1,
-	ss: 0
+	SELECT: 1,
+	RECT: 2,
+	select: {
+		selectedIndex: -1
+	},
+	rect: {
+		point: new Point(),
+		ss: 0
+	}
 };
 var carto = {
-	point1: new Point(),
-	point2: undefined,
+	shapes: [],
 	selectedTool: Tools.RECT,
 	drawShape: false,
-	ss: "0"
 };
-var canvas={
-	bottom:new Canvas("bottom"),
-	background:new Canvas("background"),
-	layer1:new Canvas("layer1"),
-	simulator:new Canvas("simulator"),
-	temp:new Canvas("temp")
+var canvas = {
+	bottom: new Canvas("bottom"),
+	background: new Canvas("background"),
+	layer1: new Canvas("layer1"),
+	simulator: new Canvas("simulator"),
+	temp: new Canvas("temp")
 }
 
 $(function() {
-	if (carto.selectedTool == Tools.RECT) {
-		$("#temp").css("cursor", "crosshair");
-	}
 	fillCanvasBackground();
+	onSelectedToolChanged();
+	$("#tool_select").click(function(e) {
+		carto.selectedTool = Tools.SELECT;
+		onSelectedToolChanged();
+	});
+	$("#tool_rect").click(function(e) {
+		carto.selectedTool = Tools.RECT;
+		onSelectedToolChanged();
+	});
+
 	$("#temp").mousedown(function(e) {
 		if (carto.selectedTool == Tools.RECT) {
-			//alert('down');
 			drawRect_onMouseDonw(e);
+		}
+	});
+	$("#temp").click(function(e) {
+		if (carto.selectedTool == Tools.SELECT) {
+			var canvasPosition = $("#temp").offset();
+			var mouseX = e.clientX - canvasPosition.left || 0;
+			var mouseY = e.clientY - canvasPosition.top || 0;
+			for (var i = 0; i < carto.shapes.length; i++) {
+				if (carto.shapes[i].contains(mouseX, mouseY)) {
+					 Tools.select.selectedIndex = i;
+					$("#x").val(carto.shapes[i].x);
+					$("#y").val(carto.shapes[i].y);
+					$("#width").val(carto.shapes[i].width);
+					$("#height").val(carto.shapes[i].height);
+					//alert("contain");
+				}
+			}
 		}
 	});
 	$("#temp").mousemove(function(e) {
@@ -97,6 +133,19 @@ $(function() {
 	});
 	refreshCanvasPos();
 });
+
+function onSelectedToolChanged() {
+	switch (carto.selectedTool) {
+		case Tools.SELECT:
+			$("#temp").css("cursor", "auto");
+			break;
+		case Tools.RECT:
+			$("#temp").css("cursor", "crosshair");
+			break;
+		default:
+			break;
+	}
+}
 
 function refreshCanvasPos() {
 	var width = $(window).width() - 250;
@@ -130,7 +179,7 @@ function drawRect_onMouseMove(e) {
 	var p = new Point(mouseX, mouseY);
 	if (carto.drawShape) {
 		canvas["temp"].clearAll();
-		canvas["temp"].drawRect(carto.point1.x, carto.point1.y, p.x - carto.point1.x, p.y - carto.point1.y, "#000000");
+		canvas["temp"].drawRect(Tools.rect.point.x, Tools.rect.point.y, p.x - Tools.rect.point.x, p.y - Tools.rect.point.y, "#000000");
 	}
 }
 
@@ -138,7 +187,7 @@ function drawRect_onMouseDonw(e) {
 	var canvasPosition = $("#temp").offset();
 	var mouseX = e.clientX - canvasPosition.left || 0;
 	var mouseY = e.clientY - canvasPosition.top || 0;
-	carto.point1 = new Point(mouseX, mouseY);
+	Tools.rect.point = new Point(mouseX, mouseY);
 	carto.drawShape = true;
 }
 
@@ -147,7 +196,9 @@ function drawRect_onMouseUp(e) {
 	var mouseX = e.clientX - canvasPosition.left || 0;
 	var mouseY = e.clientY - canvasPosition.top || 0;
 	point2 = new Point(mouseX, mouseY);
-	canvas["layer1"].drawRect(carto.point1.x, carto.point1.y, point2.x - carto.point1.x, point2.y - carto.point1.y, "#00ff00");
+	canvas["layer1"].drawRect(Tools.rect.point.x, Tools.rect.point.y, point2.x - Tools.rect.point.x, point2.y - Tools.rect.point.y, "#00ff00");
 	carto.drawShape = false;
 	canvas["temp"].clearAll();
+	carto.shapes.push(new Rect(Tools.rect.point.x, Tools.rect.point.y, point2.x - Tools.rect.point.x, point2.y - Tools.rect.point.y));
+	//alert(carto.shapes.length);
 }
