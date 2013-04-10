@@ -56,66 +56,41 @@ var Tools = {
 	ss: 0
 };
 var carto = {
-	point1: undefined,
+	point1: new Point(),
 	point2: undefined,
 	selectedTool: Tools.RECT,
 	drawShape: false,
 	ss: "0"
 };
+var canvas={
+	bottom:new Canvas("bottom"),
+	background:new Canvas("background"),
+	layer1:new Canvas("layer1"),
+	simulator:new Canvas("simulator"),
+	temp:new Canvas("temp")
+}
 
 $(function() {
-	//alert('init');
-	var bottom = new Canvas("bottom");
-	var temp = new Canvas("temp");
-
-	//carto.selectedTool=new int(10);
-	// alert("selectedTool " + carto.selectedTool);
-	// alert("ss " + carto.ss);
-
-	// alert(carto.selectedTool);
-	// alert("RECT "+Tools.RECT);
 	if (carto.selectedTool == Tools.RECT) {
-		$("#top").css("cursor", "crosshair");
+		$("#temp").css("cursor", "crosshair");
 	}
-
-	//bottom.canvas.onselectstart=function(){return false;}
-	//bottom.sayHi('sdf');
 	fillCanvasBackground();
-	temp.fillRect(0, 0, 500, 500, "#ff00ff");
-	temp.clearAll();
-	//var canvas = document.getElementById('bottom');
-	//var ctx = canvas.getContext('2d');
-	$("#top").mousedown(function(e) {
-		var canvasPosition = $(this).offset();
-		var mouseX = e.clientX - canvasPosition.left || 0;
-		var mouseY = e.clientY - canvasPosition.top || 0;
-		//alert('mousedown');
-		point1 = new Point(mouseX, mouseY);
-		carto.drawShape = true;
-		//point1=p1;
-	});
-	$("#top").mousemove(function(e) {
-		var canvasPosition = $(this).offset();
-		var mouseX = e.clientX - canvasPosition.left || 0;
-		var mouseY = e.clientY - canvasPosition.top || 0;
-		//alert('mousedown');
-		var p = new Point(mouseX, mouseY);
-		if (carto.drawShape) {
-			temp.clearAll();
-			temp.drawRect(point1.x, point1.y, p.x - point1.x, p.y - point1.y, "#000000");
+	$("#temp").mousedown(function(e) {
+		if (carto.selectedTool == Tools.RECT) {
+			//alert('down');
+			drawRect_onMouseDonw(e);
 		}
 	});
-	$("#top").mouseup(function(e) {
-		var canvasPosition = $(this).offset();
-		2
-		var mouseX = e.clientX - canvasPosition.left || 0;
-		var mouseY = e.clientY - canvasPosition.top || 0;
-		point2 = new Point(mouseX, mouseY);
-		//fillRect(ctx,point1.x,point1.y,point2.x-point1.x,point2.y-point1.y,"#00ff00");
-		bottom.drawRect(point1.x, point1.y, point2.x - point1.x, point2.y - point1.y, "#00ff00");
-		carto.drawShape = false;
-		temp.clearAll();
-		//alert('mouseup');
+	$("#temp").mousemove(function(e) {
+		if (carto.selectedTool == Tools.RECT) {
+			drawRect_onMouseMove(e);
+		}
+
+	});
+	$("#temp").mouseup(function(e) {
+		if (carto.selectedTool == Tools.RECT) {
+			drawRect_onMouseUp(e);
+		}
 	});
 	$(window).resize(function() {
 		refreshCanvasPos();
@@ -135,7 +110,7 @@ function refreshCanvasPos() {
 
 	canvasWidth = $("#bottom").width();
 	canvasHeight = $("#bottom").height();
-	
+
 	canvasX = x + (containerWidth - canvasWidth) / 2;
 	canvasY = y + (containerHeight - canvasHeight) / 2;
 
@@ -146,4 +121,33 @@ function refreshCanvasPos() {
 
 	$("canvas").css("left", canvasX.toString() + "px");
 	$("canvas").css("top", canvasY.toString() + "px");
+}
+
+function drawRect_onMouseMove(e) {
+	var canvasPosition = $("#temp").offset();
+	var mouseX = e.clientX - canvasPosition.left || 0;
+	var mouseY = e.clientY - canvasPosition.top || 0;
+	var p = new Point(mouseX, mouseY);
+	if (carto.drawShape) {
+		canvas["temp"].clearAll();
+		canvas["temp"].drawRect(carto.point1.x, carto.point1.y, p.x - carto.point1.x, p.y - carto.point1.y, "#000000");
+	}
+}
+
+function drawRect_onMouseDonw(e) {
+	var canvasPosition = $("#temp").offset();
+	var mouseX = e.clientX - canvasPosition.left || 0;
+	var mouseY = e.clientY - canvasPosition.top || 0;
+	carto.point1 = new Point(mouseX, mouseY);
+	carto.drawShape = true;
+}
+
+function drawRect_onMouseUp(e) {
+	var canvasPosition = $("#temp").offset();
+	var mouseX = e.clientX - canvasPosition.left || 0;
+	var mouseY = e.clientY - canvasPosition.top || 0;
+	point2 = new Point(mouseX, mouseY);
+	canvas["layer1"].drawRect(carto.point1.x, carto.point1.y, point2.x - carto.point1.x, point2.y - carto.point1.y, "#00ff00");
+	carto.drawShape = false;
+	canvas["temp"].clearAll();
 }
